@@ -7,14 +7,15 @@ const visitRouter = require('./routers/visits')
 
 
 var corsOptions = {
-    origin: '*',
-    optionsSuccessStatus: 200
+    "origin": "*",
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "preflightContinue": true,
+    "optionsSuccessStatus": 204
 }
 
 app.use(express.json())
 app.use(visitRouter)
 app.use(cors(corsOptions))
-app.options('*', cors())
 
 app.listen(PORT, () => {
     console.log(`Listening from port: ${PORT}`)
