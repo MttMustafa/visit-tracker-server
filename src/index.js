@@ -14,6 +14,7 @@ var corsOptions = {
 app.use(express.json())
 app.use(visitRouter)
 app.use(cors(corsOptions))
+app.options('*', cors())
 
 app.listen(PORT, () => {
     console.log(`Listening from port: ${PORT}`)
