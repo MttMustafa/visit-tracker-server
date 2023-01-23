@@ -1,7 +1,7 @@
 const express = require('express')
 
 // TODO: create process env for port
-const PORT = 8000;
+const PORT = process.env.PORT;
 const app = express();
 const visitRouter = require('./routers/visits')
 
