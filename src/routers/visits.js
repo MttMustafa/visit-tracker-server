@@ -2,7 +2,16 @@ const express = require('express')
 const router = new express.Router()
 const visitModel = require('../models/visits')
 
-router.get('/visit', async (req, res) => {
+router.get('/', async (req, res) => {
+    try {
+        res.status(200).send('No op in this route')
+    } catch (err) {
+        res.status(500).send(err)
+    }
+})
+
+
+router.get('/read-visit', async (req, res) => {
     try {
         const params = req.query
         const visits = await visitModel.readVisit(params)
@@ -13,7 +22,7 @@ router.get('/visit', async (req, res) => {
 })
 
 
-router.post('/visit', async (req, res) => {
+router.post('/create-visit', async (req, res) => {
     try {
         const params = req.body.params
         console.log(params)
@@ -25,7 +34,7 @@ router.post('/visit', async (req, res) => {
     }
 })
 
-router.put('/visit', async (req, res) => {
+router.put('/update-visit', async (req, res) => {
     try {
         const id = req.body.id
         const params = req.body.params
@@ -36,7 +45,7 @@ router.put('/visit', async (req, res) => {
     }
 })
 
-router.delete('/visit', async (req, res) => {
+router.delete('/delete-visit', async (req, res) => {
     try {
         const id = req.body.id
         const newDelete = await visitModel.deleteVisit(id)
