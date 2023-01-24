@@ -11,7 +11,7 @@ async function createVisit(params) {
         INSERT INTO visits
         (id ,loc, date, startTime, endTime, allVisitors, workDone, cost)
         VALUES
-        (UUID(), '${params.loc}', '${params.date}',
+        (${params.id}, '${params.loc}', '${params.date}',
                  '${params.startTime}', '${params.endTime}',
                  '${params.allVisitors}', '${params.workDone}', ${params.cost})
     `)
