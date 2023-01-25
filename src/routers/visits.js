@@ -14,6 +14,7 @@ router.get('/', async (req, res) => {
 router.get('/read-visit', async (req, res) => {
     try {
         const params = req.query
+        console.log(params)
         const visits = await visitModel.readVisit(params)
         res.status(200).send(visits)
     } catch (err) {

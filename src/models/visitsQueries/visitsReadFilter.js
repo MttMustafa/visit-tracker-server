@@ -53,7 +53,7 @@ function selFilter(target, selInput, queryCondition, clause = 'or') {
     }
     
     if(clause.toLowerCase() === 'and') {
-        queryCondition += ` JSON_CONTAINS(${target}, '"${selInput}"')`
+        queryCondition += selInput.map( el => ` JSON_CONTAINS(${target}, '"${el}"')`).join(' AND')
         return queryCondition
 
     } else if(clause.toLowerCase() === 'or') {
