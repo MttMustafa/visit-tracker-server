@@ -3,12 +3,12 @@ const validator = require('validator')
 function makeReadFilter(params, queryCondition) {
     params = JSON.parse(params)
     console.log(params)
-    if(params.loc) queryCondition = selFilter('loc', params.loc, queryCondition, params.selClause)
+    if(params.loc) queryCondition = selFilter('loc', params.loc, queryCondition, 'or')
     if(params.dates) queryCondition = spanFilter('date', params.dates, queryCondition)
     if(params.startTimeRange) queryCondition = spanFilter('startTime', params.startTimeRange, queryCondition)
     if(params.endTimeRange) queryCondition = spanFilter('endTime', params.endTimeRange, queryCondition)
     if(params.workedTime) queryCondition = spanFilter('HOUR(TIMEDIFF(endTime, startTime))', params.workedTime, queryCondition)
-    if(params.allVisitors) queryCondition = selFilter('allVisitors', params.allVisitors, queryCondition, params.selClause)
+    if(params.allVisitors) queryCondition = selFilter('allVisitors', params.allVisitors, queryCondition, 'and')
     if(params.workSearch) queryCondition = stringFilter('workDone', params.workSearch, queryCondition)
     if(params.cost) queryCondition = spanFilter('cost', params.cost, queryCondition)
     
@@ -18,7 +18,6 @@ function makeReadFilter(params, queryCondition) {
 // check if input is arr
 // according to targetdata check if the input is true
 function spanFilter(targetData, spanInput, queryCondition) {
-
     const prevQuery = queryCondition
     if(queryCondition) queryCondition += ` AND`
     else queryCondition += `WHERE`
@@ -52,7 +51,7 @@ function selFilter(target, selInput, queryCondition, clause = 'or') {
         queryCondition = prevQuery
         return prevQuery
     }
-
+    
     if(clause.toLowerCase() === 'and') {
         queryCondition += ` JSON_CONTAINS(${target}, '"${selInput}"')`
         return queryCondition
