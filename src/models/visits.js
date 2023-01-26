@@ -7,74 +7,94 @@ const { makeReadOrder } = require('./visitsQueries/visitReadOrder')
 
 async function createVisit(params) {
 
-    const result =  await db.query(`
+    try {
+        const result =  await db.query(`
         INSERT INTO visits
         (id ,loc, date, startTime, endTime, allVisitors, workDone, cost)
         VALUES
         ('${params.id}', '${params.loc}', '${params.date}',
                  '${params.startTime}', '${params.endTime}',
                  '${params.allVisitors}', '${params.workDone}', ${params.cost})
-    `)
+        `)
 
-    console.log(params)
-    console.log(result)
-    return result
+        return result
+    } catch (err) {
+        console.log(err)
+        return {Error: err}
+    }
 }
 
 async function readVisit(params) {
 
-    let queryCondition = ``
-    let queryOrder = ``
+    try {
+        let queryCondition = ``
+        let queryOrder = ``
+    
+        if(params) queryCondition = makeReadFilter(params, queryCondition)
+        if(queryCondition.Error) throw (queryCondition.Error)
 
-    if(params.filter) queryCondition = makeReadFilter(params.filter, queryCondition)
-    if(params.sort) queryOrder = makeReadOrder(params.sort, queryOrder)
+        if(params.order) queryOrder = makeReadOrder(params.order, queryOrder)
+        if(queryCondition.Error) throw (queryCondition.Error)
 
-    const finalQuery = `SELECT * FROM visits
-                        ${queryCondition}
-                        ${queryOrder}`
-
-    console.log(finalQuery)
-
-    const result = await db.query(finalQuery)
-
-    return result
+        const finalQuery = `SELECT * FROM visits
+                            ${queryCondition}
+                            ${queryOrder}`
+    
+        console.log(finalQuery)
+    
+        const result = await db.query(finalQuery)
+    
+        return result
+    } catch (err) {
+        console.log(err)
+        return {Error: err}
+    }
     
 }
 
 
 async function updateVisit(id, params) {
+    try {
+        let colsToUpdate = ``
 
-    let colsToUpdate = ``
+        for (let i = 0; i < Object.keys(params).length; i++) {
+            const key = Object.keys(params)[i];
+            if(typeof params[key] === 'number') {
+                colsToUpdate= colsToUpdate + `${key}=${params[key]}`
+            } else {
+                colsToUpdate = colsToUpdate + `${key}='${params[key]}'`
+            }
 
-    for (let i = 0; i < Object.keys(params).length; i++) {
-        const key = Object.keys(params)[i];
-        if(typeof params[key] === 'number') {
-            colsToUpdate= colsToUpdate + `${key}=${params[key]}`
-        } else {
-            colsToUpdate = colsToUpdate + `${key}='${params[key]}'`
+            if(i !== Object.keys(params).length - 1) {
+                colsToUpdate += ', '
+            }
+
         }
 
-        if(i !== Object.keys(params).length - 1) {
-            colsToUpdate += ', '
+        let updateQuery = `UPDATE visits SET ${colsToUpdate} WHERE id='${id}'`
+
+        if(colsToUpdate) {
+            const result = await db.query(updateQuery)
+            return result
         }
 
+        return "No change"
+    } catch (err) {
+        console.log(err)
+        return {Error: err}
     }
-
-    let updateQuery = `UPDATE visits SET ${colsToUpdate} WHERE id='${id}'`
-
-    if(colsToUpdate) {
-        const result = await db.query(updateQuery)
-        return result
-    }
-
-    return "No change"
 }
 
 async function deleteVisit(id) {
-    const result = await db.query(`
+    try {
+        const result = await db.query(`
         DELETE FROM visits WHERE id='${id}'
-    `)
-    return result
+        `)
+        return result
+    } catch (err) {
+        console.log(err)
+        return {Error: err}
+    }
 }
 
 module.exports = {
