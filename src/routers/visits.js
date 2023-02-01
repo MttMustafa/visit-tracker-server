@@ -26,14 +26,14 @@ router.get('/read-visit', async (req, res) => {
 
 router.post('/create-visit', async (req, res) => {
     try {
-        const params = req.body.params
+        const params = req.body
         console.log(params)
         const newVisit  = await visitModel.createVisit(params)
-        if(newVisit.err) throw Error(visits)
+        if(newVisit.Error) throw newVisit.Error
 
         res.status(201).send(newVisit)
     } catch (err) {
-        res.status(500).send(err)
+        res.status(500).send(`${err}`)
     }
 })
 
@@ -42,7 +42,7 @@ router.put('/update-visit', async (req, res) => {
         const id = req.body.id
         const params = req.body.params
         const newUpdate = await visitModel.updateVisit(id, params)
-        if(newUpdate.err) throw Error(visits)
+        if(newUpdate.Error) throw newUpdate.Error
         res.status(200).send(newUpdate)
     } catch (err) {
         res.status(500).send(err)
@@ -53,7 +53,7 @@ router.delete('/delete-visit', async (req, res) => {
     try {
         const id = req.body.id
         const newDelete = await visitModel.deleteVisit(id)
-        if(newDelete.err) throw Error(visits)
+        if(newDelete.Error) throw newDelete.Error
         res.status(200).send(newDelete)
     } catch (err) {
         res.status(500).send(err)

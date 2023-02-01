@@ -6,8 +6,8 @@ const { makeReadOrder } = require('./visitsQueries/visitReadOrder')
 // TODO: Handle and return errors properly
 
 async function createVisit(params) {
-
     try {
+        console.log(params)
         const result =  await db.query(`
         INSERT INTO visits
         (id ,loc, date, startTime, endTime, allVisitors, workDone, cost)
