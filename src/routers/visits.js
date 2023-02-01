@@ -26,7 +26,7 @@ router.get('/read-visit', async (req, res) => {
 
 router.post('/create-visit', async (req, res) => {
     try {
-        const params = req.body
+        const params = req.body.params
         console.log(params)
         const newVisit  = await visitModel.createVisit(params)
         if(newVisit.Error) throw newVisit.Error
