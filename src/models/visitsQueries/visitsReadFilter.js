@@ -36,13 +36,12 @@ function spanFilter(targetData, spanInput, queryCondition) {
     
         const [min, max] = spanInput
     
-        if(min > max) return prevQuery
-    
         if (min && !max) {
             queryCondition += ` ${targetData} >= '${min}'`
         }  else if (!min && max) {
             queryCondition += ` ${targetData} <= '${max}'`
         } else if (min && max) {
+            if(min > max) return prevQuery
             queryCondition += ` ${targetData} >= '${min}' AND
                                 ${targetData} <= '${max}'`
         } else {
