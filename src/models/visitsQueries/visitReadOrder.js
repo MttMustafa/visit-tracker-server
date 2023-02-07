@@ -2,7 +2,7 @@ const validator = require('validator')
 
 function makeReadOrder(params, queryOrder) {
 
-    return orderData(params.by, params.order, queryOrder)
+    return orderData(params.order[0], params.order[1], queryOrder)
 }
 
 function orderData(target, order, queryOrder) {
@@ -11,7 +11,7 @@ function orderData(target, order, queryOrder) {
         const prevQuery = queryOrder
 
         if(!['asc', 'desc'].includes(order.toLowerCase())) {
-            return prevQuery
+                throw "Invalid order type."
         }
     
         if(target === 'loc') {
