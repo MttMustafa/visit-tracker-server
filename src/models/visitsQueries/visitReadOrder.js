@@ -1,8 +1,14 @@
 const validator = require('validator')
 
 function makeReadOrder(params, queryOrder) {
-
-    return orderData(params.order[0], params.order[1], queryOrder)
+    try {
+        queryOrder = orderData(params[0], params[1], queryOrder)
+        if (queryOrder.Error) throw queryCondition.Error
+        return queryOrder
+    } catch (err) {
+        console.log(err)
+        return {Error: err}
+    }
 }
 
 function orderData(target, order, queryOrder) {
