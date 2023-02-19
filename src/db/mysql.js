@@ -8,7 +8,7 @@ const configuration = {
     database: process.env.DATABASE,
     waitForConnections: process.env.WAITFORCONN,
     connectionLimit: process.env.CONNLIM,
-    idleTimeout: IDLETIMEOUT,
+    idleTimeout: process.env.IDLETIMEOUT,
     queueLimit: process.env.QLIM
 }
 
