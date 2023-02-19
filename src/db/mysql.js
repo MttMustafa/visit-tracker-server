@@ -5,11 +5,15 @@ const configuration = {
     port: process.env.DBPORT,
     user: process.env.USER,
     password: process.env.PASSWORD,
-    database: process.env.DATABASE
+    database: process.env.DATABASE,
+    waitForConnections: process.env.WAITFORCONN,
+    connectionLimit: process.env.CONNLIM,
+    idleTimeout: IDLETIMEOUT,
+    queueLimit: process.env.QLIM
 }
 
 async function query(query, params) {
-    const connection = await mysql.createConnection(configuration)
+    const connection = await mysql.createPool(configuration)
     const [rows, fields] = await connection.execute(query, params)
 
     return rows
