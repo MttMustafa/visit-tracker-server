@@ -7,7 +7,8 @@ const configuration = {
     password: process.env.PASSWORD,
     database: process.env.DATABASE,
     waitForConnections: process.env.WAITFORCONN,
-    connectionLimit: process.env.CONNLIM
+    connectionLimit: process.env.CONNLIM,
+    queueLimit: process.env.QLIM
 }
 
 const pool = mysql.createPool(configuration)
