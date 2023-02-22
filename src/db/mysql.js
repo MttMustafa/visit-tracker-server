@@ -12,10 +12,11 @@ const configuration = {
     queueLimit: process.env.QLIM
 }
 
-const connection = await mysql.createPool(configuration)
+const pool = mysql.createPool(configuration)
+const promisePool = pool.promise()
 
 async function query(query, params) {
-    const [rows, fields] = await connection.execute(query, params)
+    const [rows, fields] = await promisePool.query(query, params)
     return rows
 }
 
