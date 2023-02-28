@@ -1,4 +1,3 @@
-const validator = require('validator')
 
 function makeReadOrder(params, queryOrder) {
     try {
@@ -6,15 +5,15 @@ function makeReadOrder(params, queryOrder) {
         if (queryOrder.Error) throw queryCondition.Error
         return queryOrder
     } catch (err) {
-        console.log(err)
         return {Error: err}
     }
 }
 
+// Builds up and SQL order query string from given parameters
+
 function orderData(target, order, queryOrder) {
     
     try {
-        const prevQuery = queryOrder
 
         if(!['asc', 'desc'].includes(order.toLowerCase())) {
                 throw "Invalid order type."
@@ -32,7 +31,6 @@ function orderData(target, order, queryOrder) {
         
         return queryOrder
     } catch (err) {
-        console.log(err)
         return {Error: err}
     }
 }

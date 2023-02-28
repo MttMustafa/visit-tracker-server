@@ -1,4 +1,3 @@
-const validator = require('validator')
 
 function makeReadFilter(params, queryCondition) {
     try {   
@@ -8,7 +7,6 @@ function makeReadFilter(params, queryCondition) {
                 params[key] = JSON.parse(element)
             }
         }
-        console.log(params)
         if(params.loc) queryCondition = selFilter('loc', params.loc, queryCondition, 'or')
         if(params.dates) queryCondition = spanFilter('date', params.dates, queryCondition)
         if(params.startTimeRange) queryCondition = spanFilter('startTime', params.startTimeRange, queryCondition)
@@ -21,13 +19,13 @@ function makeReadFilter(params, queryCondition) {
         if(queryCondition.Error) throw queryCondition.Error
         return queryCondition
     } catch (err) {
-        console.log(err)
         return {Error: err}
     }
 }
 
-// check if input is arr
-// according to targetdata check if the input is true
+// Go to function to make a query of range of values
+// It can handle handle having only one range value or none
+
 function spanFilter(targetData, spanInput, queryCondition) {
     try {
         const prevQuery = queryCondition
@@ -50,13 +48,13 @@ function spanFilter(targetData, spanInput, queryCondition) {
     
         return queryCondition
     } catch (err) {
-        console.log(err)
         return {Error: err}
     }
 }
 
-//check if input arr
-//check if string according to input
+// Handles creating a query string that...
+// finds a value in JSON data type in given column 
+
 function selFilter(target, selInput, queryCondition, clause = 'or') {
     try {
         const prevQuery = queryCondition
@@ -70,21 +68,19 @@ function selFilter(target, selInput, queryCondition, clause = 'or') {
         }
         if(clause.toLowerCase() === 'and') {
             queryCondition += selInput.map( el => ` JSON_CONTAINS(${target}, '"${el}"')`).join(' AND')
-            console.log(queryCondition)
             return queryCondition
     
         } else if(clause.toLowerCase() === 'or') {
             queryCondition += selInput.map( el => ` JSON_CONTAINS(${target}, '"${el}"')`).join(' OR')
-            console.log(queryCondition)
             return queryCondition
         }
     } catch (err) {
-        console.log(err)
         return {Error: err}
     }
 }
 
-//check if string
+// Creates query that searches a string in given column
+
 function stringFilter(targetData, searchInput, queryCondition) {
     try {
         if(queryCondition) queryCondition += ` AND`
@@ -94,7 +90,6 @@ function stringFilter(targetData, searchInput, queryCondition) {
     
         return queryCondition
     } catch (err) {
-        console.log(err)
         return {Error: err}
     }
 }

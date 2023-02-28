@@ -11,6 +11,9 @@ const configuration = {
     queueLimit: process.env.QLIM
 }
 
+// Creates a connection pool
+// Requests made faster, saves up from making unnecessary new connections
+
 const pool = mysql.createPool(configuration)
 const promisePool = pool.promise()
 

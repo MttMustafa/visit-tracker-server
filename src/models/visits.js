@@ -2,12 +2,10 @@ const db = require('../db/mysql')
 const { makeReadFilter } = require('./visitsQueries/visitsReadFilter')
 const { makeReadOrder } = require('./visitsQueries/visitReadOrder')
 
-// TODO: Add validation for query inputs
-// TODO: Handle and return errors properly
+// With the received parameters, MySQL creates SQL create query
 
 async function createVisit(params) {
     try {
-        console.log(params)
         const result =  await db.query(`
         INSERT INTO visits
         (id ,loc, date, startTime, endTime, allVisitors, workDone, cost)
@@ -19,10 +17,11 @@ async function createVisit(params) {
 
         return result
     } catch (err) {
-        console.log(err)
         return {Error: err}
     }
 }
+
+// Calls filter or order query functions if parameters there
 
 async function readVisit(params) {
 
@@ -30,23 +29,24 @@ async function readVisit(params) {
         let queryCondition = ``
         let queryOrder = ``
     
-        if(params) queryCondition = makeReadFilter(params, queryCondition)
-        if(queryCondition.Error) throw (queryCondition.Error)
+        if (params.loc || params.dates || 
+            params.startTimeRange || params.endTimeRange || 
+            params.workedTime || params.allVisitors ||
+            params.workSearch || params.cost)
+           queryCondition = makeReadFilter(params, queryCondition)
+        if (queryCondition.Error) throw (queryCondition.Error)
 
-        if(params.order) queryOrder = makeReadOrder(params.order, queryOrder)
-        if(queryCondition.Error) throw (queryCondition.Error)
+        if (params.order) queryOrder = makeReadOrder(params.order, queryOrder)
+        if (queryCondition.Error) throw (queryCondition.Error)
 
         const finalQuery = `SELECT * FROM visits
                             ${queryCondition}
                             ${queryOrder}`
     
-        console.log(finalQuery)
-    
         const result = await db.query(finalQuery)
     
         return result
     } catch (err) {
-        console.log(err)
         return {Error: err}
     }
     
@@ -80,7 +80,6 @@ async function updateVisit(id, params) {
 
         return "No change"
     } catch (err) {
-        console.log(err)
         return {Error: err}
     }
 }
@@ -92,7 +91,6 @@ async function deleteVisit(id) {
         `)
         return result
     } catch (err) {
-        console.log(err)
         return {Error: err}
     }
 }
